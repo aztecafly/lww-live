@@ -1,0 +1,214 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Presenter · Learning Without Walls</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Domine:wght@600;700&family=Nunito+Sans:wght@400;700;800&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<style>
+  :root { --burgundy:#7A1F35; --dark:#2A1218; --grey:#EEECEC; --white:#FBF9F8; --pink:#F6D9DF; --rose:#E8B4C0; --soft:#4A3D40; --ok:#1F6B4A; }
+  * { box-sizing:border-box; }
+  html,body { margin:0; height:100%; background:var(--white); color:var(--dark); font-family:'Nunito Sans', Arial, sans-serif; }
+  .layout { display:grid; grid-template-columns:300px 1fr; height:100vh; }
+  aside { background:var(--dark); color:var(--white); padding:20px 16px; overflow-y:auto; }
+  aside h2 { font-family:Domine, Georgia, serif; font-size:18px; margin:0 0 4px; }
+  aside p.small { font-size:12px; color:var(--rose); margin:0 0 16px; }
+  .act { display:block; width:100%; text-align:left; font:inherit; font-size:15px; color:var(--white); background:transparent;
+         border:1px solid #4A2A33; border-radius:10px; padding:10px 12px; margin:0 0 6px; cursor:pointer; }
+  .act:hover { background:#3A1C24; }
+  .act.on { background:var(--burgundy); border-color:var(--burgundy); font-weight:800; }
+  .group { font-size:11px; font-weight:800; letter-spacing:2px; text-transform:uppercase; color:var(--rose); margin:14px 0 6px; }
+  .ctl { display:flex; flex-wrap:wrap; gap:8px; margin-top:18px; }
+  .ctl button { flex:1 1 120px; font:inherit; font-size:14px; font-weight:800; border:0; border-radius:10px; padding:10px; cursor:pointer; }
+  .b-white { background:var(--white); color:var(--dark); } .b-rose { background:var(--rose); color:var(--dark); } .b-line { background:transparent; color:var(--white); border:1px solid var(--rose) !important; }
+  .stage { position:relative; padding:48px 64px; overflow:hidden; display:flex; flex-direction:column; }
+  .top { display:flex; justify-content:space-between; align-items:flex-start; gap:32px; }
+  .eyebrow { font-size:16px; font-weight:800; letter-spacing:3px; text-transform:uppercase; color:var(--burgundy); margin:0 0 10px; }
+  .title { font-family:Domine, Georgia, serif; font-size:clamp(28px, 3.4vw, 56px); line-height:1.15; margin:0; }
+  .join { flex:none; display:flex; align-items:center; gap:14px; background:var(--grey); border-radius:16px; padding:12px 16px; }
+  .join .url { font-size:15px; font-weight:800; } .join .n { font-size:13px; color:var(--soft); }
+  .body { flex:1; display:flex; flex-direction:column; justify-content:center; padding-top:24px; min-height:0; }
+  .bars { display:flex; flex-direction:column; gap:20px; }
+  .bar .lab { display:flex; justify-content:space-between; font-size:clamp(18px, 1.8vw, 30px); font-weight:800; margin-bottom:8px; }
+  .bar .track { height:clamp(28px, 3vw, 48px); background:var(--grey); border-radius:999px; overflow:hidden; }
+  .bar .fill { height:100%; background:var(--burgundy); border-radius:999px; transition:width .6s ease; }
+  .bar.correct .fill { background:var(--ok); } .bar.dim .fill { background:#B9AEB1; }
+  .tag { font-size:.7em; padding:2px 12px; border-radius:999px; background:#DDEFE6; color:var(--ok); margin-left:12px; }
+  .cloud { display:flex; flex-wrap:wrap; justify-content:center; align-items:center; gap:10px 28px; padding:20px; }
+  .cloud span { font-weight:800; line-height:1.1; transition:font-size .5s; }
+  .feed { display:grid; grid-template-columns:repeat(auto-fill, minmax(320px, 1fr)); gap:16px; overflow-y:auto; align-content:start; padding:4px; }
+  .card { position:relative; background:var(--grey); border-left:6px solid var(--burgundy); border-radius:14px; padding:18px 44px 18px 20px; font-size:22px; line-height:1.35; }
+  .card .x { position:absolute; top:8px; right:8px; border:0; background:transparent; color:var(--soft); font-size:20px; cursor:pointer; }
+  .card .who { display:block; font-size:13px; color:var(--soft); margin-top:6px; }
+  .board { display:flex; gap:24px; margin-top:32px; }
+  .team { flex:1; background:var(--dark); color:var(--white); border-radius:18px; padding:20px 24px; }
+  .team.win { background:var(--burgundy); }
+  .team .nm { font-size:18px; font-weight:800; color:var(--rose); } .team .sc { font-family:Domine, Georgia, serif; font-size:44px; } .team .sub { font-size:13px; color:var(--pink); }
+  .home { flex:1; display:flex; align-items:center; justify-content:center; gap:64px; }
+  .home h1 { font-family:Domine, Georgia, serif; font-size:clamp(36px, 4.5vw, 80px); margin:0 0 16px; }
+  .home p { font-size:clamp(18px, 1.8vw, 30px); color:var(--soft); margin:0; }
+  .home .big { background:var(--white); padding:20px; border-radius:20px; box-shadow:0 8px 32px rgba(42,18,24,.12); }
+  .empty { font-size:24px; color:var(--soft); text-align:center; }
+  .login { position:fixed; inset:0; background:var(--dark); display:flex; align-items:center; justify-content:center; z-index:9; }
+  .login form { background:var(--white); padding:32px; border-radius:20px; width:min(420px, 90vw); }
+  .login h2 { font-family:Domine, Georgia, serif; margin:0 0 12px; }
+  .login input { width:100%; font:inherit; font-size:18px; padding:12px; border:2px solid #CFC8CA; border-radius:10px; }
+  .login button { margin-top:12px; width:100%; font:inherit; font-size:18px; font-weight:800; color:var(--white); background:var(--burgundy); border:0; border-radius:10px; padding:12px; cursor:pointer; }
+  .err { color:var(--burgundy); font-weight:700; margin-top:10px; min-height:1em; }
+  .hidecontrols .layout { grid-template-columns:0 1fr; } .hidecontrols aside { display:none; }
+  .toggle { position:absolute; left:12px; bottom:12px; font:inherit; font-size:12px; background:var(--grey); border:0; border-radius:8px; padding:6px 10px; cursor:pointer; opacity:.6; }
+</style>
+</head>
+<body>
+<div class="login" id="login"><form id="lf"><h2>Presenter key</h2><p>Enter the ADMIN_KEY you set on Netlify.</p><input id="k" type="password" autocomplete="current-password"><button>Start</button><div class="err" id="lerr"></div></form></div>
+<div class="layout">
+  <aside>
+    <h2>Learning Without Walls</h2>
+    <p class="small">Click an activity to open it on every phone.</p>
+    <div id="list"></div>
+    <div class="ctl">
+      <button class="b-white" id="reveal">Reveal answer</button>
+      <button class="b-rose" id="stop">Close · show join screen</button>
+      <button class="b-line" id="reset">Clear responses</button>
+    </div>
+  </aside>
+  <section class="stage">
+    <div id="view"></div>
+    <button class="toggle" id="tog">Hide controls</button>
+  </section>
+</div>
+<script src="activities.js"></script>
+<script>
+(function () {
+  const A = window.ACTIVITIES, T = window.TEAMS, joinUrl = location.origin + "/";
+  const host = location.host;
+  let key = ""; try { key = sessionStorage.getItem("lww:key") || ""; } catch (e) {}
+  let state = { active: null, reveal: false }, results = {}, timer = null;
+  const esc = s => String(s).replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+  const H = () => ({ "content-type": "application/json", "x-admin-key": key });
+  const api = async (path, opts = {}) => {
+    const r = await fetch("/api/" + path, Object.assign({ headers: H(), cache: "no-store" }, opts));
+    const d = await r.json().catch(() => ({}));
+    if (!r.ok) throw new Error(d.error || "Request failed");
+    return d;
+  };
+  const qr = (el, size) => { el.innerHTML = ""; if (window.QRCode) new QRCode(el, { text: joinUrl, width: size, height: size, colorDark: "#2A1218", colorLight: "#FBF9F8" }); else el.textContent = joinUrl; };
+  const cidOf = k => k.split("/")[2].split("~")[0];
+
+  // Login
+  async function tryKey(k) {
+    key = k; await api("check");
+    try { sessionStorage.setItem("lww:key", k); } catch (e) {}
+    document.getElementById("login").style.display = "none";
+    start();
+  }
+  document.getElementById("lf").onsubmit = e => { e.preventDefault(); tryKey(document.getElementById("k").value.trim()).catch(err => document.getElementById("lerr").textContent = err.message); };
+  if (key) tryKey(key).catch(() => {});
+
+  // Sidebar
+  function list() {
+    let html = "", g = "";
+    const firstQuiz = A.findIndex(a => a.quiz);
+    A.forEach((a, i) => {
+      const grp = a.quiz ? "Break: Myth or Fact" : i < firstQuiz ? "Opening & Part 1" : "Parts 3–4 & wrap-up";
+      if (grp !== g) { html += '<div class="group">' + grp + '</div>'; g = grp; }
+      html += '<button class="act' + (state.active === a.id ? " on" : "") + '" data-id="' + a.id + '">' + esc(a.label) + '</button>';
+    });
+    document.getElementById("list").innerHTML = html;
+    document.querySelectorAll(".act").forEach(b => b.onclick = () => setState(b.dataset.id, false));
+    const cur = A.find(a => a.id === state.active);
+    const rv = document.getElementById("reveal");
+    rv.style.display = cur && cur.quiz ? "" : "none";
+    rv.textContent = state.reveal ? "Hide answer" : "Reveal answer";
+    document.getElementById("reset").style.display = cur ? "" : "none";
+  }
+  async function setState(active, reveal) {
+    try { state = await api("state", { method: "POST", body: JSON.stringify({ active, reveal }) }); results = {}; list(); draw(); refresh(); }
+    catch (e) { alert(e.message); }
+  }
+  document.getElementById("stop").onclick = () => setState(null, false);
+  document.getElementById("reveal").onclick = () => setState(state.active, !state.reveal);
+  document.getElementById("reset").onclick = async () => {
+    const cur = A.find(a => a.id === state.active); if (!cur) return;
+    if (!confirm("Clear all responses for “" + cur.label + "”? This cannot be undone.")) return;
+    await api("reset", { method: "POST", body: JSON.stringify({ activity: cur.id }) }).catch(e => alert(e.message));
+    refresh();
+  };
+  document.getElementById("tog").onclick = () => { document.body.classList.toggle("hidecontrols"); document.getElementById("tog").textContent = document.body.classList.contains("hidecontrols") ? "Show controls" : "Hide controls"; };
+
+  // Data
+  async function refresh() {
+    clearTimeout(timer);
+    const cur = A.find(a => a.id === state.active);
+    if (cur) {
+      const ids = cur.quiz && state.reveal ? A.filter(a => a.quiz).map(a => a.id) : [cur.id];
+      try { results = await api("results?activities=" + ids.join(",")); draw(); } catch (e) {}
+    }
+    timer = setTimeout(refresh, 2500);
+  }
+
+  // Views
+  function header(cur, items) {
+    const people = new Set(items.map(i => cidOf(i.key))).size;
+    return '<div class="top"><div><p class="eyebrow">' + esc(cur.quiz ? "Myth or Fact?" : cur.label) + '</p><h2 class="title">' + esc(cur.title) + '</h2></div>' +
+      '<div class="join"><div id="qrs"></div><div><div class="url">' + esc(host) + '</div><div class="n">' + people + ' responded</div></div></div></div>';
+  }
+  function bars(cur, items) {
+    const counts = cur.options.map(o => items.filter(i => i.value === o).length), total = items.length || 1;
+    return '<div class="bars">' + cur.options.map((o, i) => {
+      const pct = Math.round(counts[i] * 100 / total);
+      const cls = cur.quiz && state.reveal ? (o === cur.answer ? " correct" : " dim") : "";
+      return '<div class="bar' + cls + '"><div class="lab"><span>' + esc(o) + (cls === " correct" ? '<span class="tag">Correct</span>' : "") + '</span><span>' + pct + '% · ' + counts[i] + '</span></div><div class="track"><div class="fill" style="width:' + pct + '%"></div></div></div>';
+    }).join("") + '</div>';
+  }
+  function cloud(items) {
+    const m = new Map();
+    items.forEach(i => { const w = i.value.toLowerCase().replace(/[.!?,]+$/, "").trim(); if (w) m.set(w, (m.get(w) || 0) + 1); });
+    const words = [...m.entries()].sort((a, b) => b[1] - a[1]).slice(0, 45);
+    if (!words.length) return '<p class="empty">Waiting for the first answers…</p>';
+    const max = words[0][1], colors = ["#7A1F35", "#2A1218", "#A64B60", "#4A3D40"];
+    const shuffled = words.map((w, i) => [w, (i * 7919) % 97]).sort((a, b) => a[1] - b[1]).map(x => x[0]);
+    return '<div class="cloud">' + shuffled.map(([w, n], i) => '<span title="' + n + '" style="font-size:' + Math.round(22 + 78 * Math.sqrt(n / max)) + 'px;color:' + colors[i % colors.length] + '">' + esc(w) + '</span>').join("") + '</div>';
+  }
+  function feed(items) {
+    if (!items.length) return '<p class="empty">Waiting for the first ideas…</p>';
+    return '<div class="feed">' + items.slice().sort((a, b) => b.t - a.t).map(i => '<div class="card">' + esc(i.value) + '<button class="x" title="Hide" data-k="' + esc(i.key) + '">×</button></div>').join("") + '</div>';
+  }
+  function leaderboard() {
+    const quiz = A.filter(a => a.quiz), score = {}, members = {};
+    T.forEach(t => { score[t.id] = 0; members[t.id] = new Set(); });
+    quiz.forEach(q => (results[q.id] || []).forEach(i => {
+      if (!score.hasOwnProperty(i.team)) return;
+      members[i.team].add(cidOf(i.key));
+      if (i.value === q.answer) score[i.team]++;
+    }));
+    const avg = T.map(t => ({ t, a: members[t.id].size ? score[t.id] / members[t.id].size : 0, n: members[t.id].size }));
+    const best = Math.max(...avg.map(x => x.a));
+    return '<div class="board">' + avg.map(x => '<div class="team' + (x.a === best && x.a > 0 ? " win" : "") + '"><div class="nm">Team ' + esc(x.t.name) + (x.a === best && x.a > 0 ? " · leading" : "") + '</div><div class="sc">' + x.a.toFixed(1) + '</div><div class="sub">avg correct per player · ' + x.n + (x.n === 1 ? ' player' : ' players') + '</div></div>').join("") + '</div>';
+  }
+  function draw() {
+    const v = document.getElementById("view"), cur = A.find(a => a.id === state.active);
+    if (!cur) {
+      v.innerHTML = '<div class="home"><div><p class="eyebrow">Join tonight’s session</p><h1>Scan to join</h1><p>or go to <b>' + esc(host) + '</b></p><p style="margin-top:12px">Keep the page open on your phone.</p></div><div class="big" id="qrb"></div></div>';
+      v.style.cssText = "display:flex;flex:1"; qr(document.getElementById("qrb"), 380); return;
+    }
+    v.style.cssText = "display:flex;flex-direction:column;flex:1;min-height:0";
+    const items = results[cur.id] || [];
+    let body = cur.kind === "choice" ? bars(cur, items) : cur.display === "cloud" ? cloud(items) : feed(items);
+    if (cur.quiz && state.reveal) body += '<p style="font-size:22px;color:#4A3D40;margin:24px 0 0">' + esc(cur.why || "") + '</p>' + leaderboard();
+    v.innerHTML = header(cur, items) + '<div class="body">' + body + '</div>';
+    qr(document.getElementById("qrs"), 96);
+    v.querySelectorAll(".x").forEach(b => b.onclick = async () => { await api("hide", { method: "POST", body: JSON.stringify({ key: b.dataset.k }) }).catch(e => alert(e.message)); refresh(); });
+  }
+
+  async function start() {
+    try { state = await api("state"); } catch (e) {}
+    list(); draw(); refresh();
+  }
+})();
+</script>
+</body>
+</html>
