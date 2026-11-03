@@ -114,7 +114,7 @@
     let html = "", g = "";
     const firstQuiz = A.findIndex(a => a.quiz);
     A.forEach((a, i) => {
-      const grp = a.quiz ? "Break: Myth or Fact" : i < firstQuiz ? "Opening & Part 1" : "Parts 3–4 & wrap-up";
+      const grp = a.quiz ? "Break: Myth or Fact" : i < firstQuiz ? "Opening, Parts 1–2" : "Parts 3–4 & wrap-up";
       if (grp !== g) { html += '<div class="group">' + grp + '</div>'; g = grp; }
       html += '<button class="act' + (state.active === a.id ? " on" : "") + '" data-id="' + a.id + '">' + esc(a.label) + '</button>';
     });

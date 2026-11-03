@@ -7,6 +7,13 @@ window.ACTIVITIES = [
     title: "Have you ever earned a certificate outside your degree?",
     options: ["Yes, from an online course", "Yes, from a workshop or competition", "Not yet, but I’d like to", "Not sure what counts"] },
 
+  { id: "humanai", label: "Part 2: Human or AI?", kind: "choice", display: "bars", eyebrow: "Human or AI?",
+    title: "Which answer on the screen was written by a human?",
+    options: ["A", "B", "C"] },
+
+  { id: "catch", label: "Part 2: Catch the AI’s mistakes", kind: "text", max: 3, display: "feed", eyebrow: "Fact-check race",
+    title: "What did the AI get wrong?", hint: "One mistake per post, e.g. “The source doesn’t exist”" },
+
   { id: "q1", quiz: true, label: "Myth or Fact 1", kind: "choice", options: ["Myth", "Fact"], answer: "Myth",
     title: "AI always gives correct answers.", why: "AI can be confidently wrong, so always check." },
   { id: "q2", quiz: true, label: "Myth or Fact 2", kind: "choice", options: ["Myth", "Fact"], answer: "Fact",

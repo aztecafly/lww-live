@@ -84,7 +84,7 @@
   function choice(act) {
     const picked = mine[act.id];
     const locked = act.quiz && state.reveal;
-    let html = '<p class="eyebrow">' + (act.quiz ? "Myth or Fact?" : "Vote") + '</p><h1>' + esc(act.title) + '</h1>';
+    let html = '<p class="eyebrow">' + esc(act.eyebrow || (act.quiz ? "Myth or Fact?" : "Vote")) + '</p><h1>' + esc(act.title) + '</h1>';
     const opts = act.options.map(o => '<button class="opt' + (act.quiz ? " big" : "") + (picked === o ? " sel" : "") + '" data-o="' + esc(o) + '"' + (locked ? " disabled" : "") + '>' + esc(o) + '</button>').join("");
     html += act.quiz ? '<div class="row">' + opts + '</div>' : opts;
     if (locked) {
@@ -106,7 +106,7 @@
 
   function text(act) {
     const sent = mine[act.id] || 0, max = act.max || 1;
-    let html = '<p class="eyebrow">' + (act.id === "exit" ? "Exit ticket" : act.display === "cloud" ? "Word cloud" : "Idea board") + '</p><h1>' + esc(act.title) + '</h1>';
+    let html = '<p class="eyebrow">' + esc(act.eyebrow || (act.id === "exit" ? "Exit ticket" : act.display === "cloud" ? "Word cloud" : "Idea board")) + '</p><h1>' + esc(act.title) + '</h1>';
     if (sent >= max) {
       app.innerHTML = html + '<div class="msg good">Thanks! Your answer' + (max > 1 ? "s are" : " is") + ' on the big screen.</div>';
       return;
